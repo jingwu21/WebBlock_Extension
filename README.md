@@ -1,3 +1,3 @@
 # WebBlock_Extension
-A chrome extension that lets the user copy-and-paste the website
-they want to be blocked (i.e. facebook, youtube, instagram) so they can be more productive.
+A chrome extension that enables  the user to block a website of their own choosing (i.e. facebook, youtube, instagram) while remembering the websites that need to be blocked. 
+
