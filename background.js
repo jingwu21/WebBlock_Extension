@@ -7,7 +7,7 @@ var store;
 checkInStorage();
 function checkInStorage(){
 	chrome.storage.local.get("web", function(result){
-		if(result["web"].length){
+		if(result["web"] != undefined){
 			console.log(result.web.length);
 			store = result.web;
 			chrome.webRequest.onBeforeRequest.addListener(function(detail){return {cancel: matchWebsite(detail.url, "refresh")};}, {urls: ["<all_urls>"]}, ["blocking"]);
