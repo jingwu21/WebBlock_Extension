@@ -45,7 +45,7 @@ function printWebsites(){
 function matchWebsite(detail){
 	var i;
 	for(i = 0; i < store.length; i++){
-		if(store[i].indexOf(detail) > -1){
+		if(detail.indexOf(store[i]) > -1){
 			return true;
 		}
 	}
