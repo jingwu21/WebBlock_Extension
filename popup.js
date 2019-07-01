@@ -1,6 +1,7 @@
 $(document).ready(function(){
 	//must use storage
 	var blockList = [];
+	chrome.storage.local.set({"signal": "On"});
 	$("#selectWeb").on("click", function (){
 		var searchLength = document.getElementsByName("searchWeb").length;
 		var searchValue = document.getElementsByName("searchWeb")[searchLength - 1].value;
@@ -11,14 +12,24 @@ $(document).ready(function(){
 		chrome.runtime.sendMessage({website: blockList[blockList.length - 1]});
 		
 	});
-	$("#switchButton").on("click", function(){
-		var buttonVal = document.getElementById("switchButton").value;
-		chrome.runtime.sendMessage({website: buttonVal});
+	
+	$("#switchButton").on("click", function(event){
+		
+		var buttonVal = document.getElementById("switchButton").innerHTML;
+		
 		if(buttonVal == "On"){
-			document.getElementById("switchButton").innerHTML = "Off";
+			chrome.storage.local.set({"signal": "Off"});
+			
 		}
 		else{
-			document.getElementById("switchButton").innerHTML = "On";
+			chrome.storage.local.set({"signal": "On"});
+			
 		}
+		chrome.storage.local.get("signal", function(result){
+			document.getElementById("switchButton").innerHTML = result.signal;
+		});
+		buttonVal = document.getElementById("switchButton").innerHTML;
+		chrome.runtime.sendMessage({signal: buttonVal});
+		
 	});
 });

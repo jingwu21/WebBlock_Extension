@@ -5,32 +5,61 @@ chrome.runtime.onMessage.addListener(receiver);
 var store;
 
 checkInStorage();
+chrome.webRequest.onBeforeRequest.removeListener(blockWeb);
 function checkInStorage(){
-	chrome.storage.local.get("web", function(result){
+	chrome.storage.local.get(null, function(result){
 		if(result["web"] != undefined){
 			console.log(result.web.length);
 			store = result.web;
-			chrome.webRequest.onBeforeRequest.addListener(function(detail){return {cancel: matchWebsite(detail.url, "refresh")};}, {urls: ["<all_urls>"]}, ["blocking"]);
+			chrome.webRequest.onBeforeRequest.addListener(blockWeb, {urls: ["<all_urls>"]}, ["blocking"]);
 		}
 		else{
 			chrome.storage.local.set({"web": []});
 		}
+		
+		if(result["signals"] != undefined){
+			chrome.storage.local.get("signal", function(result){
+				if(result["signals"] == "Off"){
+					chrome.webRequest.onBeforeRequest.removeListener(blockWeb);
+				}
+				console.log("from popjs: " + result.signal);
+			});
+		}
+		else{
+			chrome.storage.local.set({"signals": "On"});
+		}
+		
 	});
+	
 }
 
 function receiver(message){
 	console.log(message.website);
+	console.log(message.signal);
 	
-	chrome.storage.local.get("web", function (result){
-		console.log(result.web);
-		result["web"].push(message.website);
-		store = result.web;
-		if(store.length != 0){
-			registerBlocker();
-		}
-		chrome.storage.local.set({"web": result.web});
-	});
-	
+	if(message.signal == "Off"){
+		chrome.webRequest.onBeforeRequest.removeListener(blockWeb);
+		chrome.storage.local.set({"signals": "Off"});
+		console.log(message.signal);
+		
+	}
+	else if(message.signal == "On"){
+		chrome.storage.local.set({"signals": "On" });
+		registerBlocker();
+		
+	}
+	else{
+		chrome.storage.local.get("web", function (result){
+			console.log(result.web);
+			result["web"].push(message.website);
+			store = result.web;
+			if(store.length != 0){
+				registerBlocker();
+			}
+			console.log(store);
+			chrome.storage.local.set({"web": result.web});
+		});
+	}
 }
 
 //debugging to see if websites are added to blocked list
@@ -52,6 +81,10 @@ function matchWebsite(detail){
 	return false;
 }
 
+function blockWeb(result){
+	return {cancel: matchWebsite(result.url)};
+}
+
 function registerBlocker(){
-	chrome.webRequest.onBeforeRequest.addListener(function(result){return {cancel: matchWebsite(result.url)};}, {urls: ["<all_urls>"]}, ["blocking"]);
+	chrome.webRequest.onBeforeRequest.addListener(blockWeb, {urls: ["<all_urls>"]}, ["blocking"]);
 }
