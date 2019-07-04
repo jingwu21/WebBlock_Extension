@@ -17,34 +17,33 @@ function checkInStorage(){
 			chrome.storage.local.set({"web": []});
 		}
 		
-		if(result["signals"] != undefined){
+		if(result["signal"] != undefined){
 			chrome.storage.local.get("signal", function(result){
-				if(result["signals"] == "Off"){
+				if(result["signal"] == "Off"){
 					chrome.webRequest.onBeforeRequest.removeListener(blockWeb);
 				}
 				console.log("from popjs: " + result.signal);
 			});
 		}
-		else{
-			chrome.storage.local.set({"signals": "On"});
-		}
+	
 		
 	});
 	
 }
 
 function receiver(message){
-	console.log(message.website);
+	console.log("web " + message.website);
 	console.log(message.signal);
 	
 	if(message.signal == "Off"){
 		chrome.webRequest.onBeforeRequest.removeListener(blockWeb);
-		chrome.storage.local.set({"signals": "Off"});
-		console.log(message.signal);
+		chrome.storage.local.set({"signal": "Off"});
+		console.log("Off from message " + message.signal);
 		
 	}
 	else if(message.signal == "On"){
-		chrome.storage.local.set({"signals": "On" });
+		chrome.storage.local.set({"signal": "On" });
+		console.log("On from message signal");
 		registerBlocker();
 		
 	}

@@ -1,7 +1,7 @@
 $(document).ready(function(){
 	//must use storage
 	var blockList = [];
-	chrome.storage.local.set({"signal": "On"});
+	
 	$("#selectWeb").on("click", function (){
 		var searchLength = document.getElementsByName("searchWeb").length;
 		var searchValue = document.getElementsByName("searchWeb")[searchLength - 1].value;
@@ -13,23 +13,35 @@ $(document).ready(function(){
 		
 	});
 	
+	chrome.storage.local.get("signal", function(result){
+			if(result.signal != undefined){
+				document.getElementById("switchButton").innerHTML = result.signal;
+			}
+			else{
+				document.getElementById("switchButton").innerHTML = "On";
+				chrome.storage.local.set({"signal": "On"});
+				
+			}
+	});
+	
 	$("#switchButton").on("click", function(event){
 		
 		var buttonVal = document.getElementById("switchButton").innerHTML;
-		
+		var state = {};
 		if(buttonVal == "On"){
-			chrome.storage.local.set({"signal": "Off"});
 			
+			
+			state.signal = "Off";
 		}
 		else{
-			chrome.storage.local.set({"signal": "On"});
 			
+			state.signal = "On";
 		}
-		chrome.storage.local.get("signal", function(result){
-			document.getElementById("switchButton").innerHTML = result.signal;
-		});
-		buttonVal = document.getElementById("switchButton").innerHTML;
-		chrome.runtime.sendMessage({signal: buttonVal});
+		
+		document.getElementById("switchButton").innerHTML = state.signal;
+		
+		
+		chrome.runtime.sendMessage({signal: state.signal});
 		
 	});
 });
