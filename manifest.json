@@ -1,7 +1,7 @@
 {
-	"name": "Web Blocker",
+	"name": "Web Stopper",
 	"manifest_version": 2,
-	"version": "1.0",
+	"version": "1.1",
 	
 	"background": {
 		"scripts" : ["background.js"]

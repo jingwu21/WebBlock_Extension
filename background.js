@@ -1,11 +1,11 @@
-console.log("It worked!! Background Script YAY PROGRESS");
+
 chrome.runtime.onMessage.addListener(receiver);
 
 
 var store;
 
 checkInStorage();
-chrome.webRequest.onBeforeRequest.removeListener(blockWeb);
+//chrome.webRequest.onBeforeRequest.removeListener(blockWeb);
 function checkInStorage(){
 	chrome.storage.local.get(null, function(result){
 		if(result["web"] != undefined){
@@ -14,7 +14,7 @@ function checkInStorage(){
 			chrome.webRequest.onBeforeRequest.addListener(blockWeb, {urls: ["<all_urls>"]}, ["blocking"]);
 		}
 		else{
-			chrome.storage.local.set({"web": []});
+			chrome.storage.local.set({"web": {}});
 		}
 		
 		if(result["signal"] != undefined){
@@ -50,7 +50,8 @@ function receiver(message){
 	else{
 		chrome.storage.local.get("web", function (result){
 			console.log(result.web);
-			result["web"].push(message.website);
+			let tempString = message.website;
+			result.web[tempString] = message.website;
 			store = result.web;
 			if(store.length != 0){
 				registerBlocker();
@@ -69,14 +70,36 @@ function printWebsites(){
 	});	
 }
 
+function parseUrl(url){
+		var temp = url.includes("https") ? url.replace("https://", ""):url.replace("http://", "");
+		var i = temp.indexOf("/");
+		temp = temp.substring(0,i);
+		return temp;
+		
+}
+
 //check to see if website is in list of blocked websites
 function matchWebsite(detail){
-	var i;
+	
+	/*
 	for(i = 0; i < store.length; i++){
 		if(detail.indexOf(store[i]) > -1){
 			return true;
 		}
-	}
+	}*/
+	const url = parseUrl(detail);
+	/*
+	for(const x in store){
+		if(detail.indexOf(x) > -1){
+			console.log("Checking: " + detail);
+			return true;
+		}
+	}*/
+	if(url in store)
+		return true;
+	
+	
+	
 	return false;
 }
 

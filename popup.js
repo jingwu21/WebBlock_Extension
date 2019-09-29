@@ -2,14 +2,23 @@ $(document).ready(function(){
 	//must use storage
 	var blockList = [];
 	
+	function parseUrl(url){
+		var temp = url.includes("https") ? url.replace("https://", ""):url.replace("http://", "");
+		var i = temp.indexOf("/");
+		temp = temp.substring(0,i);
+		return temp;
+		
+	}
+	
 	$("#selectWeb").on("click", function (){
 		var searchLength = document.getElementsByName("searchWeb").length;
 		var searchValue = document.getElementsByName("searchWeb")[searchLength - 1].value;
 		if(searchValue.length != 0){
-			blockList.push(searchValue);
+			blockList.push(parseUrl(searchValue));
+			chrome.runtime.sendMessage({website: blockList[blockList.length - 1]});
 		}
 		
-		chrome.runtime.sendMessage({website: blockList[blockList.length - 1]});
+		
 		
 	});
 	
