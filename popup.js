@@ -1,26 +1,24 @@
 $(document).ready(function(){
 	//must use storage
 	var blockList = [];
-	
 	function parseUrl(url){
 		var temp = url.includes("https") ? url.replace("https://", ""):url.replace("http://", "");
+		temp = temp.replace("www.", "");
 		var i = temp.indexOf("/");
-		temp = temp.substring(0,i);
+		if(i >= 0)
+			temp = temp.substring(0,i);
 		return temp;
 		
 	}
 	
 	$("#selectWeb").on("click", function (){
-		//var searchLength = document.getElementsByName("searchWeb").length;
-		const searchInput = document.getElementsByName("searchWeb");
+		const searchInput = document.getElementsByName("searchWeb")[0];
 		var searchValue = searchInput.value;
 		if(searchValue.length != 0){
 			blockList.push(parseUrl(searchValue));
 			chrome.runtime.sendMessage({website: blockList[blockList.length - 1]});
-			windows.alert(searchValue + "successfully blocked");
 			searchInput.value = '';
 		}
-		
 		
 		
 	});

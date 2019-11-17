@@ -72,8 +72,10 @@ function printWebsites(){
 
 function parseUrl(url){
 		var temp = url.includes("https") ? url.replace("https://", ""):url.replace("http://", "");
+		temp = temp.replace("www.","");
 		var i = temp.indexOf("/");
-		temp = temp.substring(0,i);
+		if(i >= 0)
+			temp = temp.substring(0,i);
 		return temp;
 		
 }
