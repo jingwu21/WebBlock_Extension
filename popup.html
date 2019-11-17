@@ -3,18 +3,29 @@
 
 	<head>
 		<title>Web Stopper</title>
-		
+		<style>
+			h1{
+				color: #e21515;
+				
+			}
+			.buttonComp{
+				color: black;
+				background-color: #e4a450;
+			}
+
+		</style>
 		
 	</head>
 
-	<body style="background-color:#ffcbb3;">
+	<body style="background-color:rgb(213, 235, 91)">
 		<h1> Web Stopper</h1>
 		<hr>
-		<input type="text" name="searchWeb" placeholder="Copy/Paste Link Here" />
-		<button id="selectWeb" type="button">Add</button>
+		<br>
+		<input type="text" name="searchWeb" placeholder="Copy/Paste Link Here"/>
+		<button id="selectWeb" type="button" class="buttonComp">Add</button>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 		<script src="popup.js"></script>
-		<button id="switchButton" type="button">On</button>
+		<button id="switchButton" type="button" class="buttonComp">On</button>
 	</body>
 
 
