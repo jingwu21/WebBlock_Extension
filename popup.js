@@ -11,11 +11,14 @@ $(document).ready(function(){
 	}
 	
 	$("#selectWeb").on("click", function (){
-		var searchLength = document.getElementsByName("searchWeb").length;
-		var searchValue = document.getElementsByName("searchWeb")[searchLength - 1].value;
+		//var searchLength = document.getElementsByName("searchWeb").length;
+		const searchInput = document.getElementsByName("searchWeb");
+		var searchValue = searchInput.value;
 		if(searchValue.length != 0){
 			blockList.push(parseUrl(searchValue));
 			chrome.runtime.sendMessage({website: blockList[blockList.length - 1]});
+			windows.alert(searchValue + "successfully blocked");
+			searchInput.value = '';
 		}
 		
 		
